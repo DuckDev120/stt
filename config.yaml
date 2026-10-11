@@ -1,0 +1,83 @@
+# =====================================================================
+# Speech-to-Text Dictation Service - Configuration
+# =====================================================================
+
+whisper:
+  # Model choices: small (instant, pre-cached on GPU, fast & accurate), medium, large-v3-turbo, base
+  model_size: "small"
+  # Device: "cuda" (NVIDIA GPU), "cpu", or "auto" (attempts cuda with cpu fallback)
+  device: "cuda"
+  # Compute type: "float16" for RTX GPU, "int8" or "int8_float16", "int8" for CPU
+  compute_type: "float16"
+  # Language: null for auto-detection between Hebrew and English, or "he", "en"
+  language: null
+  # Initial prompt bias to prime Whisper tokenization for Hebrew + English jargon
+  initial_prompt: "שלום, Hello, מדברים בעברית ובאנגלית. תמלול מדויק כולל סימני פיסוק."
+  # Beam size: 1 is fastest for real-time streaming, 5 is max quality
+  beam_size: 1
+  # Streaming interval in seconds for updating the live partial in HUD
+  streaming_interval_sec: 0.6
+
+audio:
+  # Sample rate required by Whisper: 16000 Hz mono
+  sample_rate: 16000
+  channels: 1
+  # device_index: null for system default microphone, or integer device index
+  device_index: null
+  # Internal chunk size for ring buffer
+  chunk_duration_sec: 0.2
+  # Maximum recording duration limit in seconds
+  max_recording_sec: 180
+
+vad:
+  # Silero Voice Activity Detection to filter background noise and prevent hallucination
+  enabled: true
+  threshold: 0.5
+  min_speech_duration_ms: 100
+  min_silence_duration_ms: 300
+
+injection:
+  # Method: "unicode" (safe Win32 SendInput without touching clipboard) or "clipboard" (instant Ctrl+V)
+  method: "unicode"
+  # Restore the exact window that had focus when Right Alt was pressed down
+  # (even if user clicked or typed elsewhere while speaking)
+  restore_target_window: true
+  # Delay in milliseconds between keystrokes in unicode mode (0 for instant)
+  char_delay_ms: 0
+  # Keep a safety backup of every dictation in the clipboard
+  copy_to_clipboard: true
+
+hud:
+  enabled: true
+  # Dynamic Island position: top center of the main display
+  top_margin_px: 12
+  width: 520
+  height: 64
+  # Slide animation duration in ms (smooth 60fps)
+  animation_duration_ms: 200
+  show_waveform: true
+  show_partial_text: true
+
+sound_cues:
+  enabled: true
+  volume: 0.7
+  start_chime: true
+  stop_chime: true
+
+hotkey:
+  # Trigger key options:
+  # - "AUTO_RIGHT" (Recommended): Responds to ANY key on the right side of the spacebar
+  #   (including Fn / Apps menu key, Right Alt, and Right Ctrl)!
+  # - "FN": Specifically targets the Fn / Apps key (VK_APPS 0x5D)
+  # - "VK_RMENU": Right Alt only
+  # - "VK_RCONTROL": Right Ctrl only
+  # - "VK_APPS": Context Menu / Fn key only
+  trigger_key: "AUTO_RIGHT"
+  # Block Windows from opening the application menu bar on Alt/Apps release
+  suppress_windows_menu: true
+  # Double-tap to lock recording (Hands-Free mode) without having to hold the key
+  double_tap_lock_enabled: true
+  # Time window in milliseconds to detect a double-tap (default: 350ms)
+  double_tap_threshold_ms: 350
+
+
